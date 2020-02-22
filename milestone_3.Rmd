@@ -1,0 +1,14 @@
+---
+title: "Milestone 3"
+author: "Pieter Quinton"
+date: "2/21/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+The paper I am currently planning on using for the GOV 1006 Final Project is, "Electoral Institutions and Electoral Cycles in Investment Incentives: A Field Experiment on Over 3,000 U.S. Municipalities" by Nathan M. Jensen, Micheal G. Findley, and Daniel L. Nielson. The paper examines the effects of electoral timing on local economic development efforts. The authors hypothesize that politicians use financial incentives to encourage firms to announce large investments in the lead up to elections so the politicians can claim credit for securing the investment. The authors used survey data from 3,000 municipalities on investment incentives as well as data on election timings and electoral institutions to analyze the relationship. The authors manipulated the election timing on municipalities to establish control and treatment groups. Their findings show no statistical difference between investment incentives pre and post election for the entire sample of municipalities. However, municipalites with manufacturing dominated industries were more likely to offer incentives pre-election than post-election. 
+
+Github Repo: https://github.com/PGQuinton/gov1006-finalproject-idea4
