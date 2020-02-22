@@ -958,6 +958,8 @@ estout * using "Accessory/Table D6.ALTERNATIVE PARTISANSHIP.txt", ///
 * TABLE D7 - Randomization Balance Checks
 *************************************************************
 
+# Clearing workspace and setting dataset for the new section
+
 clear
 use "Incentives Experiment Replication Data.dta"
 
@@ -970,6 +972,9 @@ by beforeelection: sum lnpop quart_1 quart_2 quart_3 quart_4 regi_1 regi_2 regi_
 
 logit beforeelection lnpop quart_1 quart_2 quart_3 regi_1 regi_2 regi_3 Japan China
 outreg2 using "Accessory/Table D7.RandomizationCheck.doc", replace
+
+# These next code chunks are attempts to increase the number of observations for the dailypaper # variable
+# The authors express their doubts about doing this though
 
 *****
 *add dailypaper, but that decreases number of observations a lot. prob to those with larger population as lnpop becomes significant
@@ -987,6 +992,11 @@ outreg2 using "Accessory/Table D7.RandomizationCheck.doc", append
 *add partisanship measures
 *presdem_2008 mrp_estimate
 *also drops observations and population again becomes significant. but mostly not anything to worry about here
+
+# Adding more covariates to the logistic regression
+# Again, authors are concerned that there aren't enough observations in these 
+# variables to make accurate claims from them.
+
 logit beforeelection lnpop quart_1 quart_2 quart_3 regi_1 regi_2 regi_3 Japan China dailypaper presdem_2008
 outreg2 using "Accessory/Table D7.RandomizationCheck.doc", append
 
@@ -1003,6 +1013,8 @@ outreg2 using "Accessory/Table D7.RandomizationCheck.doc", append
 *	Election Treatment
 ********************************************************************************
 
+# New section so clean workspace and new dataset.
+
 clear
 use "Incentives Experiment Replication Data.dta"
 
@@ -1014,11 +1026,16 @@ test 1.beforeelection#1.manufacturingfocus = 0.beforeelection#1.manufacturingfoc
 *Which results in chi2(  1) =    4.13; Prob > chi2 =    0.0422
 
 
+# Logistic regression on response with interaction variables to test the effects of 
+# manufacturing on responding to the treatment
+
 probit response i.beforeelection#i.manufacturingfocus lnpop quart_1 quart_2 quart_4 regi_2 regi_3 regi_4 Japan China
 *Treatment effect for manufacturing cities is: 0.5124004-0.0762859=.4361145. P-value computed as: 
 test 1.beforeelection#1.manufacturingfocus = 0.beforeelection#1.manufacturingfocus
 *Which results in chi2(  1) =      4.03; Prob > chi2 =    0.0446
 
+
+# Same idea but with incentive instead of response.
 
 probit incentoffered i.beforeelection#i.manufacturingfocus
 *Treatment effect for manufacturing cities is: 0.8149803-0.3531292 = .4618511. P-value computed as: 
@@ -1030,6 +1047,9 @@ probit incentoffered i.beforeelection#i.manufacturingfocus lnpop quart_1 quart_2
 test 1.beforeelection#1.manufacturingfocus = 0.beforeelection#1.manufacturingfocus
 *Which results in chi2(  1) =      3.88; Prob > chi2 =    0.049
 
+
+# Again same idea but with logged dollars
+# Linear regression instead of logistic 
 
 regress lndollars2 i.beforeelection#i.manufacturingfocus
 *Treatment effect for manufacturing cities is: disp 0.5484879-0.0766626 = .4718253. P-value computed as: 
@@ -1054,10 +1074,17 @@ test 1.beforeelection#1.manufacturingfocus = 0.beforeelection#1.manufacturingfoc
 clear
 use "Incentives Experiment Replication Data.dta"
 
+# Basically just testing some other stuff out here to see if anything else pops
+# up as statistically significant
+
+# Logistic regression with response as independent variable.
+
 *From Table D4
 probit response presdem_2008 lnpop manufacturingfocus growth mayor2 regi_1 regi_2 regi_3
 probit response presdem_2008 lnpop manufacturingfocus growth mayor2 regi_1 regi_2 regi_3 dailypaper unemp_rate
 estimates store m1, title(Model 1)
+
+# Same idea but incentive instead of response
 
 probit incentoffered presdem_2008 lnpop manufacturingfocus growth mayor2 regi_1 regi_2 regi_3
 probit incentoffered presdem_2008 lnpop manufacturingfocus growth mayor2 regi_1 regi_2 regi_3 dailypaper unemp_rate
@@ -1082,14 +1109,22 @@ estout * using "Accessory/Table D9.D4WithMoreControls.txt", ///
 clear
 use "Incentives Experiment Replication Data.dta"
 
+# Testing the effects of partisanship on response with state fixed effects
+# Additional covariates are added to the second regression
+
 *From Table D5
 probit response presdem_2008 elected lnpop estado_*
 probit response presdem_2008 elected lnpop estado_* dailypaper unemp_rate
 estimates store m1, title(Model 1)
  
+# The alternative measure of partisanship is used here instead of 
+# whether the president was democratic in 2008
+
 probit response mrp_estimate elected lnpop estado_*
 probit response mrp_estimate elected lnpop estado_* dailypaper unemp_rate
 estimates store m2, title(Model 2)
+
+# Same process but with incentive instead of response.
 
 probit incentoffered presdem_2008 elected lnpop estado_*
 probit incentoffered presdem_2008 elected lnpop estado_* dailypaper unemp_rate
@@ -1098,6 +1133,9 @@ estimates store m3, title(Model 3)
 probit incentoffered mrp_estimate elected lnpop estado_*
 probit incentoffered mrp_estimate elected lnpop estado_* dailypaper unemp_rate
 estimates store m4, title(Model 4)
+
+# Same process but with logged dollars instead
+# Linear regression not logistic
 
 regress lndollars2 presdem_2008 elected lnpop estado_*
 regress lndollars2 presdem_2008 elected lnpop estado_* dailypaper unemp_rate
@@ -1122,6 +1160,10 @@ estout * using "Accessory/Table D10.D5WithMoreControls.txt", ///
 clear
 use "Incentives Experiment Replication Data.dta"
 
+# Basically everything is in the regression here
+# All fixed effects plus all covariates 
+# Tested on response
+
 *From Table D6
 probit response mrp_estimate afterelection population_block Japan China quart_2 quart_3 quart_4 regi_1 regi_2 regi_3
 probit response mrp_estimate afterelection population_block Japan China quart_2 quart_3 quart_4 regi_1 regi_2 regi_3 dailypaper unemp_rate
@@ -1131,6 +1173,8 @@ probit response mrp_estimate afterelection population_block Japan China quart_2 
 probit response mrp_estimate afterelection population_block Japan China quart_2 quart_3 quart_4 estado_* dailypaper unemp_rate
 estimates store m2, title(Model 2)
 
+# Incentive instead of response
+
 probit incentoffered mrp_estimate afterelection population_block Japan China quart_2 quart_3 quart_4 regi_1 regi_2 regi_3
 probit incentoffered mrp_estimate afterelection population_block Japan China quart_2 quart_3 quart_4 regi_1 regi_2 regi_3 dailypaper unemp_rate
 estimates store m3, title(Model 3)
@@ -1138,6 +1182,8 @@ estimates store m3, title(Model 3)
 probit incentoffered mrp_estimate afterelection population_block Japan China quart_2 quart_3 quart_4 estado_*
 probit incentoffered mrp_estimate afterelection population_block Japan China quart_2 quart_3 quart_4 estado_* dailypaper unemp_rate
 estimates store m4, title(Model 4)
+
+# Logged dollars instead of incentive or response
 
 regress lndollars2 mrp_estimate afterelection population_block Japan China quart_2 quart_3 quart_4 regi_1 regi_2 regi_3
 regress lndollars2 mrp_estimate afterelection population_block Japan China quart_2 quart_3 quart_4 regi_1 regi_2 regi_3 dailypaper unemp_rate
